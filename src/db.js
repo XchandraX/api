@@ -1,11 +1,7 @@
 const mysql = require("mysql2/promise");
 
 const pool = mysql.createPool({
-  host: '52.76.27.242',   // ganti dengan host kamu
-  user: 'sql1234567',                  // username dari dashboard
-  password: 'sYp4KnVdAq',            // password kamu
-  database: 'sql1234567',              // database name kamu
-  port: 3306,                           // default port
+  uri: 'mysql://root:OxGKiMTeskKcqphBbHxGZRLhTVYYfasH@maglev.proxy.rlwy.net:19890/railway',  // URL koneksi Railway
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
@@ -15,7 +11,7 @@ pool
   .getConnection()
   .then((conn) => {
     console.log("Database connected!");
-    conn.release();
+    conn.release();  // Pastikan koneksi dilepaskan setelah digunakan
   })
   .catch((err) => {
     console.error("Database connection failed: ", err.message);
