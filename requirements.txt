@@ -1,4 +1,6 @@
 pandas
 scikit-learn
-Sastrawi
 scipy
+Sastrawi
+pickle5  # Tambahkan jika menggunakan Python < 3.8
+pickle-mixin
