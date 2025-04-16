@@ -4,8 +4,8 @@ require("dotenv").config();
 
 const init = async () => {
   const server = Hapi.server({
-    port: 9000,
-    host: "localhost",
+    port: process.env.PORT || 9000,
+    host: "0.0.0.0", // Ubah dari localhost ke 0.0.0.0 agar bisa diakses dari luar
     routes: { cors: { origin: ["*"] } },
   });
 
@@ -14,5 +14,10 @@ const init = async () => {
   await server.start();
   console.log(`Server berjalan di ${server.info.uri}`);
 };
+
+process.on('unhandledRejection', (err) => {
+  console.log(err);
+  process.exit(1);
+});
 
 init();

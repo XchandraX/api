@@ -103,7 +103,9 @@ const loginUser = async (req, h) => {
 
 const runPythonScript = (scriptPath, args = []) => {
   return new Promise((resolve, reject) => {
-    const process = spawn("python", [scriptPath, ...args]);
+    // Gunakan 'python' bukan 'python3' untuk kompatibilitas
+    const pythonCommand = process.platform === 'win32' ? 'python' : 'python3';
+    const process = spawn(pythonCommand, [scriptPath, ...args]);
 
     let result = "";
     process.stdout.on("data", (data) => {
@@ -116,7 +118,11 @@ const runPythonScript = (scriptPath, args = []) => {
 
     process.on("close", (code) => {
       if (code === 0) {
-        resolve(JSON.parse(result));
+        try {
+          resolve(JSON.parse(result));
+        } catch (e) {
+          reject(new Error(`Failed to parse JSON: ${result}`));
+        }
       } else {
         reject(new Error("Python script failed"));
       }
@@ -124,11 +130,10 @@ const runPythonScript = (scriptPath, args = []) => {
   });
 };
 
-// -------------------------------------------------------------------------------- //
-
+// Perbaiki path untuk API calls:
 const getAllPlaces = async (req, h) => {
   try {
-    const scriptPath = path.join(__dirname, "../../ml/RestApi/get_places.py");
+    const scriptPath = path.join(__dirname, "../RestApi/get_places.py");
     const places = await runPythonScript(scriptPath);
     return h.response({ status: "success", data: places }).code(200);
   } catch (error) {
@@ -136,32 +141,28 @@ const getAllPlaces = async (req, h) => {
   }
 };
 
-// -------------------------------------------------------------------------------- //
-
 const getPlaceById = async (req, h) => {
   try {
     const { id } = req.params;
-    const scriptPath = path.join(__dirname,"../../ml/RestApi/get_place_by_id.py");
+    const scriptPath = path.join(__dirname, "../RestApi/get_place_by_id.py");
     const place = await runPythonScript(scriptPath, [id]);
-
+    
     if (!place) {
       return h.response({ status: "fail", message: "Place not found" }).code(404);
     }
-
+    
     return h.response({ status: "success", data: place }).code(200);
   } catch (error) {
     return h.response({ status: "error", message: error.message }).code(500);
   }
 };
 
-// -------------------------------------------------------------------------------- //
-
 const getRecommendedPlaces = async (req, h) => {
   try {
     const { place_id } = req.params;
-    const scriptPath = path.join(__dirname, "../../ml/RestApi/recommendation.py");
+    const scriptPath = path.join(__dirname, "../RestApi/recommendation.py");
     const recommendations = await runPythonScript(scriptPath, [place_id]);
-
+    
     return h.response({ status: "success", data: recommendations }).code(200);
   } catch (error) {
     return h.response({ status: "error", message: error.message }).code(500);

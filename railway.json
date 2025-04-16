@@ -1,0 +1,10 @@
+{
+    "buildCommand": "pip install -r requirements.txt && npm install",
+    "startCommand": "npm start",
+    "environments": {
+      "production": {
+        "buildCommand": "pip install -r requirements.txt && npm install --production",
+        "startCommand": "npm start"
+      }
+    }
+  }
