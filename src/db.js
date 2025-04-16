@@ -1,7 +1,7 @@
 const mysql = require("mysql2/promise");
 
 const pool = mysql.createPool({
-  host: 'sql12.freesqldatabase.com',   // ganti dengan host kamu
+  host: '52.76.27.242',   // ganti dengan host kamu
   user: 'sql1234567',                  // username dari dashboard
   password: 'sYp4KnVdAq',            // password kamu
   database: 'sql1234567',              // database name kamu
