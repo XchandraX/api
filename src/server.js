@@ -5,7 +5,7 @@ require("dotenv").config();
 const init = async () => {
   const server = Hapi.server({
     port: process.env.PORT || 9000,
-    host: "0.0.0.0", // Ubah dari localhost ke 0.0.0.0 agar bisa diakses dari luar
+    host: process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost',
     routes: { cors: { origin: ["*"] } },
   });
 
